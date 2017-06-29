@@ -5,15 +5,20 @@
             <br>
             <div>
                 <b-btn id="add_photo" @click="$root.$emit('show::modal','modal1')">Добавить фотографию</b-btn>
-
-                <b-modal id="modal1" title="Заполните данные" @ok="submit" @shown="clearName">
-                    
-                    <form @submit.stop.prevent="submit">
-                    <b-form-input type="text" placeholder="Введите ваше имя" v-model="name"></b-form-input>
-                    <br>
-                    <b-form-file v-model="file"></b-form-file>
+                <b-modal id="modal1" title="Заполните данные" @ok="submit" @shown="clearName" hide-footer>
+                    <form>
+                        <div class="form-group">
+                            <label class="sr-only" for="inlineFormInput">Имя</label>
+                            <input type="text" v-model="newphoto.name" class="form-control mb-2 mr-sm-2 mb-sm-0" id="inlineFormInput" placeholder="Введите имя">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputFile">Выбирите фотографию</label>
+                            <input type="file" accept="image/*" class="form-control-file" id="exampleInputFile" aria-describedby="fileHelp">
+                        </div>
+                        <div class="modal-footer">
+                        <button v-on:click="addNewPhoto" class="btn btn-primary pull-right">Добавить</button>
+                        </div>
                     </form>
-                    
                 </b-modal>
             </div>
             <br>
@@ -23,6 +28,8 @@
                     <p>{{ photo.name }}</p>
                 </div>
             </div>
+            <br>
+            {{newphoto}}
         </div>
     </div>
 </template>
@@ -34,41 +41,49 @@
         return {
           photos: [
             {
-              'id': 1,
               'name': 'Damir Kh.',
               'url': 'https://s1.1zoom.ru/big0/942/270583-svetik.jpg'
             },
             {
-              'id': 2,
               'name': 'Alex Pl.',
               'url': 'https://i.ytimg.com/vi/OIwX21Mg5vs/maxresdefault.jpg'
             },
             {
-              'id': 3,
               'name': 'Pasha M.',
               'url': 'https://im0-tub-ru.yandex.net/i?id=c7cc03c8d3e4277681ceada8d2565663-l&n=13'
             },
             {
-              'id': 4,
               'name': 'Vitya S.',
               'url': 'http://www.youwall.com/wallpapers/201307/purple-flowers-wallpaper.jpg'
             },
             {
-              'id': 5,
               'name': 'Dima S.',
               'url': 'https://i.obozrevatel.com/8/1747448/gallery/919603.jpg'
             },
             {
-              'id': 6,
               'name': 'Sveta Ya.',
               'url': 'http://www.hcxypz.com/data/out/167/713267.jpg'
             },
             {
-              'id': 7,
               'name': 'Alice A.',
               'url': 'https://im0-tub-ru.yandex.net/i?id=ed26a62c3c6815fb43ffbe8532ac2df2-l&n=13'
             }
-          ]
+          ],
+          newphoto: {
+            'name': '',
+            'url': ''
+          }
+        }
+      },
+      methods: {
+        addNewPhoto: function () {
+          var obj = {
+            'name': '',
+            'url': ''
+          }
+          obj.name = this.newphoto.name
+          obj.url = this.newphoto.url
+          this.photos.push(obj)
         }
       }
     }
