@@ -1,19 +1,17 @@
 <template>
     <div class="photos">
-        <div class="container">
-            <h1>InstaГрам</h1>
-            <br>
+        <div class="container" style="margin-top: 50px">
             <div>
                 <b-btn id="add_photo" @click="$root.$emit('show::modal','modal1')">Добавить фотографию</b-btn>
 
                 <b-modal id="modal1" title="Заполните данные" @ok="submit" @shown="clearName">
-                    
+
                     <form @submit.stop.prevent="submit">
                     <b-form-input type="text" placeholder="Введите ваше имя" v-model="name"></b-form-input>
                     <br>
                     <b-form-file v-model="file"></b-form-file>
                     </form>
-                    
+
                 </b-modal>
             </div>
             <br>
@@ -33,6 +31,61 @@
       data () {
         return {
           photos: [
+            {
+              'id': 1,
+              'name': 'Damir Kh.',
+              'url': 'https://s1.1zoom.ru/big0/942/270583-svetik.jpg'
+            },
+            {
+              'id': 1,
+              'name': 'Damir Kh.',
+              'url': 'https://s1.1zoom.ru/big0/942/270583-svetik.jpg'
+            },
+            {
+              'id': 2,
+              'name': 'Alex Pl.',
+              'url': 'https://i.ytimg.com/vi/OIwX21Mg5vs/maxresdefault.jpg'
+            },
+            {
+              'id': 3,
+              'name': 'Pasha M.',
+              'url': 'https://im0-tub-ru.yandex.net/i?id=c7cc03c8d3e4277681ceada8d2565663-l&n=13'
+            },
+            {
+              'id': 4,
+              'name': 'Vitya S.',
+              'url': 'http://www.youwall.com/wallpapers/201307/purple-flowers-wallpaper.jpg'
+            },
+            {
+              'id': 1,
+              'name': 'Damir Kh.',
+              'url': 'https://s1.1zoom.ru/big0/942/270583-svetik.jpg'
+            },
+            {
+              'id': 1,
+              'name': 'Damir Kh.',
+              'url': 'https://s1.1zoom.ru/big0/942/270583-svetik.jpg'
+            },
+            {
+              'id': 2,
+              'name': 'Alex Pl.',
+              'url': 'https://i.ytimg.com/vi/OIwX21Mg5vs/maxresdefault.jpg'
+            },
+            {
+              'id': 3,
+              'name': 'Pasha M.',
+              'url': 'https://im0-tub-ru.yandex.net/i?id=c7cc03c8d3e4277681ceada8d2565663-l&n=13'
+            },
+            {
+              'id': 4,
+              'name': 'Vitya S.',
+              'url': 'http://www.youwall.com/wallpapers/201307/purple-flowers-wallpaper.jpg'
+            },
+            {
+              'id': 1,
+              'name': 'Damir Kh.',
+              'url': 'https://s1.1zoom.ru/big0/942/270583-svetik.jpg'
+            },
             {
               'id': 1,
               'name': 'Damir Kh.',
@@ -76,6 +129,7 @@
 
 <style scoped>
     h1{
+
         text-align: center;
     }
     .photo{
