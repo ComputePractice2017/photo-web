@@ -26,14 +26,14 @@
                 <b-btn id="add_photo" @click="$root.$emit('show::modal','modal1')">Добавить фотографию</b-btn>
                 <!--Модальное окно для вывода формы добавления фото-->
                 <b-modal id="modal1" title="Заполните данные" hide-footer>
-                    <form>
+                    <form method="post" enctype="multipart/form-data">
                         <div class="form-group">
                             <label class="sr-only" for="inlineFormInput">Имя</label>
-                            <input type="text" v-model="newphoto.name" class="form-control mb-2 mr-sm-2 mb-sm-0" id="inlineFormInput" placeholder="Введите имя" required>
+                            <input type="text" v-model="newphoto.name" class="form-control mb-2 mr-sm-2 mb-sm-0" id="namephoto_name" placeholder="Введите имя" required>
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputFile">Выбирите фотографию</label>
-                            <input type="file" accept="image/*" class="form-control-file" id="exampleInputFile" aria-describedby="fileHelp" required>
+                            <label for="filename">Выбирите фотографию</label>
+                            <input v-on:change="uploadphoto($event)" type="file" name="file" accept="image/*" class="form-control-file" id="filename" aria-describedby="fileHelp" required>
                         </div>
                         <div class="modal-footer">
                         <button v-on:click="addNewPhoto" class="btn btn-primary pull-right">Добавить</button>
@@ -69,56 +69,7 @@
       name: 'hello',
       data () {
         return {
-          photos: [
-            {
-              'name': 'Damir Kh.',
-              'url': 'https://s1.1zoom.ru/big0/942/270583-svetik.jpg'
-            },
-            {
-              'name': 'Alex Pl.',
-              'url': 'https://i.ytimg.com/vi/OIwX21Mg5vs/maxresdefault.jpg'
-            },
-            {
-              'name': 'Pasha M.',
-              'url': 'https://im0-tub-ru.yandex.net/i?id=c7cc03c8d3e4277681ceada8d2565663-l&n=13'
-            },
-            {
-              'name': 'Vitya S.',
-              'url': 'http://www.youwall.com/wallpapers/201307/purple-flowers-wallpaper.jpg'
-            },
-            {
-              'name': 'Dima S.',
-              'url': 'https://i.obozrevatel.com/8/1747448/gallery/919603.jpg'
-            },
-            {
-              'name': 'Sveta Ya.',
-              'url': 'http://www.hcxypz.com/data/out/167/713267.jpg'
-            },
-            {
-              'name': 'Alice A.',
-              'url': 'https://im0-tub-ru.yandex.net/i?id=ed26a62c3c6815fb43ffbe8532ac2df2-l&n=13'
-            },
-            {
-              'name': 'Pasha M.',
-              'url': 'https://im0-tub-ru.yandex.net/i?id=c7cc03c8d3e4277681ceada8d2565663-l&n=13'
-            },
-            {
-              'name': 'Vitya S.',
-              'url': 'http://www.youwall.com/wallpapers/201307/purple-flowers-wallpaper.jpg'
-            },
-            {
-              'name': 'Dima S.',
-              'url': 'https://i.obozrevatel.com/8/1747448/gallery/919603.jpg'
-            },
-            {
-              'name': 'Sveta Ya.',
-              'url': 'http://imagen46.com/images/2014/02/02/Fondos-de-escritorio-paisajes-forest-grass-green-lake-paisaje-mountains-nature-1080x1920.jpg'
-            },
-            {
-              'name': 'Alice D.',
-              'url': 'https://im0-tub-ru.yandex.net/i?id=ef68548c946ca3a0b5f56a222eecfecd-l&n=13'
-            }
-          ],
+          photos: null,
           newphoto: {
             'name': '',
             'url': ''
@@ -128,7 +79,9 @@
             'url': '',
             'index': ''
           },
-          search: ''
+          search: '',
+          newphotourl: '',
+          photofile: ''
         }
       },
       computed: {
@@ -143,15 +96,38 @@
           return this.photos
         }
       },
+      mounted: function () {
+        this.$http.get('/photos').then(response => {
+          this.photos = response.body
+          console.log(this.photos)
+        }, response => {
+          console.log(response)
+        })
+      },
       methods: {
+        uploadphoto: function (obj) {
+          this.photofile = obj.srcElement.files[0]
+          this.$http.post('http://localhost:8000/uploadfile', obj.srcElement.files[0]).then(response => {
+            console.log(this.response)
+            this.newphotourl = response.body
+          }, response => {
+            console.log(response)
+          })
+        },
         addNewPhoto: function () {
           var obj = {
             'name': '',
             'url': ''
           }
           obj.name = this.newphoto.name
-          obj.url = this.newphoto.url
+          obj.url = this.newphotourl
           this.photos.push(obj)
+
+          this.$http.post('http://localhost:8000/photos', obj).then(response => {
+            console.log(this.response)
+          }, response => {
+            console.log(response)
+          })
         },
         showphoto: function (obj) {
           this.sphoto.url = obj.url
@@ -159,9 +135,11 @@
           this.sphoto.index = this.photos.indexOf(obj)
         },
         deletephoto: function (obj) {
-          if (obj.index > -1) {
-            this.photos.splice(obj.index, 1)
-          }
+          this.$http.delete('/photos/' + obj.id).then(response => {
+            console.log(this.response)
+          }, response => {
+            console.log(response)
+          })
         }
       }
     }
